@@ -1603,7 +1603,8 @@
 		}
 
 		.wrapper.style1 {
-			background-image: none;
+			background-image: url("images/blue-wallpaper.jpg");
+			color: black;
 			background-color: #fff;
 		}
 
@@ -1613,6 +1614,7 @@
 		}
 
 		.wrapper.style3 {
+			background-image: url("images/blue-wallpaper.jpg");
 			background-color: #f4f4f4;
 			text-shadow: 1px 1px 0px #fff;
 		}
