@@ -10,7 +10,8 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="assets/css/main.css" media="screen" title="no title" charset="utf-8"/>
+		<link rel="stylesheet" href="assets/css/my_own_css.css" media="screen" title="no title" charset="utf-8">
 		<link rel="stylesheet" href="assets/css/skills_logos.css" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
@@ -21,7 +22,7 @@
 			<nav id="nav">
 				<ul class="container">
 					<li><a href="#top">Top</a></li>
-					<li><a href="#work">Work</a></li>
+					<li><a href="#work">Skills</a></li>
 					<li><a href="#portfolio">Portfolio</a></li>
 					<li><a href="#contact">Contact</a></li>
 				</ul>
@@ -41,11 +42,12 @@
 							<p>I am a web developer experienced in Ruby, Rails, JavaScript, and ReactJS/Flux.
 								I love building web apps and games that I think others would love to use.
 								When I am not working on a project, I enjoy playing my violin and listening to music.
-								You can reach me at www.qqinzhu@gmail.com
 							</br>
-								My <a href="https://github.com/zhu-qin">Github</a> </br>
-								My <a href="https://www.linkedin.com/in/qin-zhu-0450279b?trk=nav_responsive_tab_profile_pic">LinkedIn</a></br>
-								My <a href="assets/docs/resume.pdf">Resume</a></br>
+								<div class="button-link-container">
+									<a class="button-link" href="https://github.com/zhu-qin">Github</a> </br>
+									<a class="button-link" href="https://www.linkedin.com/in/qin-zhu-0450279b?trk=nav_responsive_tab_profile_pic">LinkedIn</a></br>
+									<a class="button-link" href="assets/docs/resume.pdf">Resume</a></br>
+								</div>
 							</p>
 							<!-- <a href="#portfolio" class="button big scrolly">See my work</a> -->
 						</div>
@@ -114,7 +116,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="4u 12u(mobile)">
-								<article class="box style2">
+								<article class="box projects">
 									<a href="https://base-page.herokuapp.com" class="image featured"><img src="images/pic01.jpg" alt="" /></a>
 									<h3><a href="https://base-page.herokuapp.com">Base Page</a></h3>
 									<p>Project management single page web app made with Rails backend and ReactJS/Flux frontend.
@@ -123,17 +125,17 @@
 								</article>
 							</div>
 							<div class="4u 12u(mobile)">
-								<article class="box style2">
+								<article class="box projects">
 									<a href="http://qin-zhu.com/space_invadersJS/" class="image featured"><img src="images/pic02.jpg" alt="" /></a>
 									<h3><a href="http://qin-zhu.com/space_invadersJS/">Space Invaders with a Rock</a></h3>
 									<p>Space Invaders remake with a rock thrown in! Made with HTML Canvas and JavaScript. Use WASD to move and Spacebar to shoot</p>
 								</article>
 							</div>
 							<div class="4u 12u(mobile)">
-								<article class="box style2">
+								<article class="box projects">
 									<a href="https://github.com/zhu-qin/rubyORM" class="image featured"><img src="images/pic03.jpg" alt="" /></a>
 									<h3><a href="https://github.com/zhu-qin/rubyORM">Ruby ORM</a></h3>
-									<p>Object Relational Mapping System using Ruby. Model names that inherit from this object map table names and columns to SQL database.
+									<p>Object Relational Mapping System made with Ruby. Class names map table names in SQL database.
 										It has methods to insert and update entries, create associations between tables, and search.
 									</p>
 								</article>
