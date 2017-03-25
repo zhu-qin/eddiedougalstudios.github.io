@@ -5,7 +5,6 @@ class Router extends React.Component {
   constructor (props) {
     super(props)
     this.state = {}
-    this.init()
   }
 
   init() {
@@ -15,6 +14,7 @@ class Router extends React.Component {
   }
 
   componentDidMount() {
+    this.init()
     this.props.children.forEach((child) => ROUTES[child.props.path] = child)
     if (!window.location.hash){
       window.location.hash = Object.keys(ROUTES)[0]

@@ -5,7 +5,7 @@ import IntroView from './intro/intro_view.jsx'
 
 const Views = {
   'Intro': IntroView,
-  'Space Invaders': SpaceInvadersView,
+  'SpaceInvaders': SpaceInvadersView,
   'Tetris': TetrisView,
   'Contact': IntroView,
 }

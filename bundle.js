@@ -21616,7 +21616,6 @@
 	    var _this = _possibleConstructorReturn(this, (Router.__proto__ || Object.getPrototypeOf(Router)).call(this, props));
 
 	    _this.state = {};
-	    _this.init();
 	    return _this;
 	  }
 
@@ -21632,6 +21631,7 @@
 	  }, {
 	    key: "componentDidMount",
 	    value: function componentDidMount() {
+	      this.init();
 	      this.props.children.forEach(function (child) {
 	        return ROUTES[child.props.path] = child;
 	      });
@@ -21684,7 +21684,7 @@
 
 	var Views = {
 	  'Intro': _intro_view2.default,
-	  'Space Invaders': _space_invaders_view2.default,
+	  'SpaceInvaders': _space_invaders_view2.default,
 	  'Tetris': _tetris_view2.default,
 	  'Contact': _intro_view2.default
 	}; // components
@@ -22009,7 +22009,6 @@
 	          { className: 'link-button link-button-' + view.split(" ").join(""),
 	            href: '#Portfolio/' + view,
 	            key: view },
-	          ' ',
 	          view
 	        );
 	      });

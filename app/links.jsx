@@ -11,7 +11,8 @@ class Links extends React.Component {
       return (
         <a className={`link-button link-button-${view.split(" ").join("")}`}
            href={`#Portfolio/${view}`}
-           key={view}> {view}
+           key={view}>
+           {view}
         </a>
       )
     })
