@@ -1,0 +1,29 @@
+body, div, a {
+  background: transparent;
+  font: inherit;
+  font-family: 'Electrolize', sans-serif;
+  text-decoration: none;
+  box-sizing: inherit;
+  letter-spacing: inherit;
+}
+
+body {
+  background-image: url('../app/assets/background.png');
+}
+
+div {
+  border-radius: 3px;
+}
+
+.app-wrapper {
+  width: 100%;
+  display: flex;
+}
+
+.game-wrapper {
+  display: flex;
+}
+
+.game-view {
+  height: 600px;
+}

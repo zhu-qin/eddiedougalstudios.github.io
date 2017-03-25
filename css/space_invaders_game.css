@@ -1,0 +1,6 @@
+#canvas {
+  border: 1px solid black;
+  border-radius: 3px;
+  margin-left: 1px;
+  background-image: url('../app/space_invaders_game/images/background.png');
+}

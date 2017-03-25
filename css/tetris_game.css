@@ -1,0 +1,112 @@
+.instructions {
+  width: 100%;
+}
+
+/*left - panel*/
+.nextpiece-display {
+  padding-top: 10px;
+  text-align: center;
+}
+
+.nextpiece-display-block {
+  width: 60%;
+  margin: auto;
+}
+
+.nextpiece-display-gameover {
+  font-size: 45px;
+  text-align: center;
+}
+
+.left-panel-score {
+  text-align: left;
+  padding: 5px;
+}
+
+.right-panel {
+  width: 220px;
+  padding: 10px;
+  border: 1px solid gray;
+}
+
+.game-buttons-wrapper {
+  text-align: center;
+  padding-top: 30px;
+}
+
+.game-control-buttons {
+  display: flex;
+}
+
+.game-buttons, .control-button{
+  width: 90%;
+  border: 1px solid gray;
+  height: 60px;
+  margin: 10px;
+  text-align: center;
+  background-color: rgba(63, 191, 157, 0.3);
+  cursor: pointer;
+}
+
+.PAUSE {
+  background-color: rgb(215, 100, 18);
+}
+
+.slide-bar {
+  width: 90%;
+}
+/*right - panel*/
+
+.instructions {
+  font-size: 16px;
+}
+
+/*game*/
+
+.row {
+  display: flex;
+}
+
+
+.display-block {
+  padding: 10px;
+  margin: 1px;
+}
+
+.block {
+  padding: 13px;
+  border: 1px solid black;
+  margin: 1px;
+}
+
+.blue {
+  background-color: rgb(37, 70, 131);
+}
+
+.red {
+  background-color: rgb(189, 45, 19);
+}
+
+.teal {
+  background-color: rgb(39, 159, 91);
+}
+
+.orange {
+  background-color: rgb(237, 130, 42);
+}
+
+.purple {
+  background-color: rgb(102, 37, 131);
+}
+
+.green {
+  background-color: rgb(37, 131, 55);
+}
+
+.row-index-0, .row-index-1{
+  display: none;
+}
+
+.bottom, .left, .right {
+  display: none;
+}

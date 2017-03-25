@@ -1,0 +1,46 @@
+.intro-wrapper {
+  width: 800px;
+  height: 600px;
+  border: 1px solid black;
+  border-radius: 3px;
+  margin-left: 1px;
+}
+
+.intro-title {
+  text-align: center;
+  font-size: 30px;
+  padding: 10px;
+}
+
+.intro-paragraph {
+  padding: 20px;
+  font-size: 20px;
+  display: block;
+}
+
+.intro-skills-list {
+  margin: auto;
+  display: flex;
+  padding: 10px;
+}
+
+.intro-skills-list-icon {
+  width: 20%;
+  margin: 5px;
+}
+
+.intro-skills-list-icon img {
+  width: 100%;
+}
+
+.intro-links-wrapper {
+  display: flex;
+  width: 300px;
+  margin: auto;
+  background-color:
+}
+
+.intro-link {
+  margin: 20px;
+  padding: 10px;
+}
