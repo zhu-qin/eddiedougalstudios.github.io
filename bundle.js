@@ -21676,7 +21676,7 @@
 
 	var _space_invaders_view2 = _interopRequireDefault(_space_invaders_view);
 
-	var _intro_view = __webpack_require__(226);
+	var _intro_view = __webpack_require__(231);
 
 	var _intro_view2 = _interopRequireDefault(_intro_view);
 
@@ -22495,15 +22495,15 @@
 
 	var _React2 = _interopRequireDefault(_React);
 
-	var _space_invaders_game = __webpack_require__(215);
+	var _stateManager = __webpack_require__(215);
 
-	var _space_invaders_game2 = _interopRequireDefault(_space_invaders_game);
+	var _stateManager2 = _interopRequireDefault(_stateManager);
 
-	var _images = __webpack_require__(220);
+	var _images = __webpack_require__(218);
 
 	var _images2 = _interopRequireDefault(_images);
 
-	var _left_panel_space_invaders = __webpack_require__(225);
+	var _left_panel_space_invaders = __webpack_require__(230);
 
 	var _left_panel_space_invaders2 = _interopRequireDefault(_left_panel_space_invaders);
 
@@ -22538,7 +22538,7 @@
 	      var ctx = canvas.getContext('2d');
 	      ctx.font = "24px serif";
 	      ctx.fillStyle = "#fff";
-	      ctx.strokeStyle = "transparent";
+	      // ctx.strokeStyle = "black";
 
 	      if (!localStorage.highScores) {
 	        localStorage.highScores = "0";
@@ -22556,7 +22556,7 @@
 	  }, {
 	    key: 'startGame',
 	    value: function startGame(ctx) {
-	      this.state.game = new _space_invaders_game2.default(ctx, this);
+	      this.state.game = new _stateManager2.default({ context: ctx, reactView: this });
 	      this.state.game.showMenu();
 	      this.panel = _React2.default.createElement(_left_panel_space_invaders2.default, { game: this.state.game });
 	      this.forceUpdate();
@@ -22564,7 +22564,7 @@
 	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
-	      this.state.game.unMountGame();
+	      // this.state.game.unMountGame()
 	    }
 	  }, {
 	    key: 'render',
@@ -26165,420 +26165,132 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _moving_ship = __webpack_require__(216);
+	var _menuState = __webpack_require__(216);
 
-	var _moving_ship2 = _interopRequireDefault(_moving_ship);
+	var _menuState2 = _interopRequireDefault(_menuState);
 
-	var _moving_bullets = __webpack_require__(219);
+	var _playingState = __webpack_require__(219);
 
-	var _moving_bullets2 = _interopRequireDefault(_moving_bullets);
+	var _playingState2 = _interopRequireDefault(_playingState);
 
-	var _utils = __webpack_require__(218);
+	var _keyManager = __webpack_require__(228);
 
-	var _utils2 = _interopRequireDefault(_utils);
+	var _keyManager2 = _interopRequireDefault(_keyManager);
 
-	var _moving_objects = __webpack_require__(217);
+	var _spaceInvadersConfig = __webpack_require__(229);
 
-	var _moving_objects2 = _interopRequireDefault(_moving_objects);
-
-	var _space_rock = __webpack_require__(221);
-
-	var _space_rock2 = _interopRequireDefault(_space_rock);
-
-	var _explosion = __webpack_require__(222);
-
-	var _explosion2 = _interopRequireDefault(_explosion);
-
-	var _images = __webpack_require__(220);
-
-	var _images2 = _interopRequireDefault(_images);
-
-	var _moving_aliens = __webpack_require__(223);
-
-	var _moving_aliens2 = _interopRequireDefault(_moving_aliens);
-
-	var _moving_special_aliens = __webpack_require__(224);
-
-	var _moving_special_aliens2 = _interopRequireDefault(_moving_special_aliens);
+	var _spaceInvadersConfig2 = _interopRequireDefault(_spaceInvadersConfig);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var SpaceInvadersGame = function () {
-	  function SpaceInvadersGame(ctx, component) {
-	    _classCallCheck(this, SpaceInvadersGame);
+	var StateManager = function () {
+	  function StateManager(config) {
+	    _classCallCheck(this, StateManager);
 
-	    this.ctx = ctx;
-	    this.component = component;
-	    this.aliens = [];
-	    this.rocks = [];
-	    this.shipBullets = [];
-	    this.alienBullets = [];
-	    this.ship = [];
-	    this.shipLives = this.makeLives();
-	    this.specialAliens = [];
-	    this.explosions = [];
-	    this.counter = 0;
-	    this.score = 0;
-	    this.highScore = localStorage.spaceInvadersHighScores || "0";
-	    this.intervals = [];
-	    this.scoreListeners = [];
+	    this.config = _spaceInvadersConfig2.default;
+	    this.gameWidth = _spaceInvadersConfig2.default.gameWidth;
+	    this.gameHeight = _spaceInvadersConfig2.default.gameHeight;
+	    this.keyManager = new _keyManager2.default({ stateManager: this });
+	    this.menuState = new _menuState2.default({ stateManager: this });
+	    this.playingState = new _playingState2.default({ stateManager: this });
+	    this.currentState = this.menuState;
+	    this.context = config.context;
+	    this.reactView = config.reactView;
+	    this.running = false;
+	    this.forceUpdate = undefined;
+	    this.showMenu();
 	  }
 
-	  // draw methods
-
-
-	  _createClass(SpaceInvadersGame, [{
-	    key: 'makeShip',
-	    value: function makeShip() {
-	      var invulnerabilityTimer = 60;
-	      if (this.shipLives.length === 0) {
-	        invulnerabilityTimer = 0;
-	      }
-	      var ship = new _moving_ship2.default({
-	        x_pos: 400,
-	        y_pos: 575,
-	        radius: 25,
-	        game: this,
-	        image: _images2.default.ship,
-	        invulnerabilityTimer: invulnerabilityTimer
-	      });
-	      this.ship.push(ship);
-	    }
-	  }, {
-	    key: 'makeExplosion',
-	    value: function makeExplosion(pos) {
-	      var explode = new _explosion2.default({
-	        pos: pos,
-	        frameWidth: 128,
-	        frameHeight: 128,
-	        frameX: 0,
-	        frameY: 0,
-	        game: this
-	      });
-	      this.explosions.push(explode);
-	    }
-	  }, {
-	    key: 'makeLives',
-	    value: function makeLives() {
-	      var _this = this;
-
-	      return Array(_utils2.default.shipLives).fill().map(function (el, idx) {
-	        return new _moving_objects2.default({
-	          x_pos: _this.ctx.canvas.width - (idx + 1) * 50,
-	          y_pos: 40,
-	          radius: 2,
-	          image: _images2.default.ship,
-	          game: _this
-	        });
-	      });
-	    }
-	  }, {
-	    key: 'makeRocks',
-	    value: function makeRocks() {
-	      var rocks = new _space_rock2.default({
-	        x_pos: 400,
-	        y_pos: 400,
-	        game: this
-	      });
-	      this.rocks.push(rocks);
-	    }
-	  }, {
-	    key: 'drawScore',
-	    value: function drawScore() {
-	      this.scoreListeners.forEach(function (listener) {
-	        return listener();
-	      });
-	      this.ctx.fillText('High Score: ' + this.highScore, 10, 20);
-	      this.ctx.fillText('Current Score: ' + this.score, 10, 40);
-	    }
-	  }, {
-	    key: 'makeAliens',
-	    value: function makeAliens() {
-	      for (var i = 115; i <= 800; i += 120) {
-	        for (var j = 80; j <= 200; j += 50) {
-	          var alien = new _moving_aliens2.default({
-	            x_pos: i,
-	            y_pos: j,
-	            radius: 20,
-	            game: this,
-	            image: _images2.default.green_invader
-	          });
-	          this.aliens.push(alien);
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'makeSpecialAlien',
-	    value: function makeSpecialAlien() {
-	      var x = Math.floor(Math.random() * 1.9) * 800;
-	      var y = Math.random() * 400 + 200;
-
-	      var alienLeft = new _moving_special_aliens2.default({
-	        x_pos: 0 - _utils2.default.alienRadius,
-	        y_pos: Math.random() * 100 + 300,
-	        move_x: _utils2.default.specialAlienMove,
-	        radius: _utils2.default.alienRadius,
-	        game: this
-	      });
-
-	      var alienRight = new _moving_special_aliens2.default({
-	        x_pos: this.ctx.canvas.width + _utils2.default.alienRadius,
-	        y_pos: Math.random() * 100 + 300,
-	        move_x: -_utils2.default.specialAlienMove,
-	        radius: _utils2.default.alienRadius,
-	        game: this
-	      });
-
-	      this.aliens.push(alienLeft);
-	      this.aliens.push(alienRight);
-	    }
-	  }, {
-	    key: 'clear',
-	    value: function clear() {
-	      this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-	    }
-	  }, {
-	    key: 'drawBackground',
-	    value: function drawBackground() {
-	      this.ctx.drawImage(this.backgroundImage, 0, 0);
-	    }
-	  }, {
-	    key: 'moveAliens',
-	    value: function moveAliens(alienMove) {
-	      this.aliens.forEach(function (alien) {
-	        alien.moveObj(alienMove);
-	      });
-
-	      this.specialAliens.forEach(function (special) {
-	        special.moveObj();
-	      });
-	    }
-	  }, {
-	    key: 'wobbleAliens',
-	    value: function wobbleAliens() {
-	      var gap = _utils2.default.hoverGap;
-	      if (this.counter >= gap / 2) {
-	        this.counter += 1;
-	        this.counter = this.counter % gap;
-	        this.moveAliens(_utils2.default.alienRight);
-	      } else if (this.counter >= 0) {
-	        this.counter += 1;
-	        this.counter = this.counter % gap;
-	        this.moveAliens(_utils2.default.alienLeft);
-	      }
-	      if (this.counter === gap - 1) {
-	        this.moveAliens(_utils2.default.alienDown);
-	      }
-	    }
-
-	    // move bullets and check collisions
-
-	  }, {
-	    key: 'moveShipBullets',
-	    value: function moveShipBullets() {
-	      var _this2 = this;
-
-	      this.shipBullets.forEach(function (bullet, bulletIndex) {
-	        bullet.moveObj(_utils2.default.shipBullet);
-	        if (bullet.y_pos <= 0 - _utils2.default.canvasHeight * 0.2) {
-	          _this2.shipBullets.shift();
-	        }
-	        _this2.aliens.forEach(function (alien, alienIndex) {
-	          if (bullet.collideWith(alien)) {
-	            _this2.aliens.splice(alienIndex, 1);
-	            if (alien instanceof _moving_special_aliens2.default) {
-	              _this2.score += 50;
-	            }
-	            _this2.shipBullets.splice(bulletIndex, 1);
-	            _this2.makeExplosion({ x: alien.x_pos - _utils2.default.offsetExplosion, y: alien.y_pos - _utils2.default.offsetExplosion });
-	            _this2.score += 10;
-	          }
-	        });
-
-	        _this2.rocks.forEach(function (rock) {
-	          if (bullet.collideWith(rock)) {
-	            _this2.makeExplosion({ x: rock.x_pos - _utils2.default.offsetExplosion, y: rock.y_pos - _utils2.default.offsetExplosion });
-	            rock.velocity.y -= 3;
-	            _this2.shipBullets.splice(bulletIndex, 1);
-	          }
-	        });
-	      });
-	    }
-	  }, {
-	    key: 'moveAlienBullets',
-	    value: function moveAlienBullets() {
-	      var _this3 = this;
-
-	      this.alienBullets.forEach(function (bullet, bulletIndex) {
-	        bullet.moveObj(_utils2.default.alienBullet);
-	        if (bullet.y_pos >= _utils2.default.canvasHeight * 1.4) {
-	          _this3.alienBullets.shift();
-	        }
-
-	        // alien bullets to ship
-	        if (bullet.collideWith(_this3.ship[0]) && _this3.ship[0].invulnerabilityTimer === 0) {
-	          _this3.makeExplosion({ x: _this3.ship[0].x_pos - _utils2.default.offsetExplosion, y: _this3.ship[0].y_pos - _utils2.default.offsetExplosion });
-	          _this3.alienBullets.splice(bulletIndex, 1);
-	          _this3.shipLives.pop();
-	          _this3.ship.shift();
-	          _this3.makeShip();
-	        }
-
-	        // alien bullet to rock
-	        _this3.rocks.forEach(function (rock) {
-	          if (bullet.collideWith(rock)) {
-	            _this3.makeExplosion({ x: rock.x_pos - _utils2.default.offsetExplosion, y: rock.y_pos - _utils2.default.offsetExplosion });
-	            rock.velocity.y += 1;
-	            _this3.alienBullets.splice(bulletIndex, 1);
-	          }
-	        });
-	      });
-	    }
-	  }, {
-	    key: 'moveRocks',
-	    value: function moveRocks() {
-	      var _this4 = this;
-
-	      this.rocks.forEach(function (rock) {
-	        rock.moveObj();
-	        _this4.aliens.forEach(function (alien, alienIndex) {
-	          if (rock.collideWith(alien)) {
-	            _this4.makeExplosion({ x: rock.x_pos - _utils2.default.offsetExplosion, y: rock.y_pos - _utils2.default.offsetExplosion });
-	            _this4.aliens.splice(alienIndex, 1);
-	            if (alien instanceof _moving_special_aliens2.default) {
-	              _this4.score += 50;
-	            }
-	            _this4.score += 10;
-	          }
-	        });
-
-	        if (rock.collideWith(_this4.ship[0]) && _this4.ship[0].invulnerabilityTimer === 0) {
-	          _this4.makeExplosion({ x: _this4.ship[0].x_pos - _utils2.default.offsetExplosion, y: _this4.ship[0].y_pos - _utils2.default.offsetExplosion });
-	          _this4.shipLives.pop();
-	          _this4.ship.shift();
-	          _this4.makeShip();
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'alienFire',
-	    value: function alienFire() {
-	      var index = Math.floor(Math.random() * this.aliens.length);
-	      this.aliens[index].fire();
-	      this.specialAliens.forEach(function (alien) {
-	        alien.fire();
-	      });
-	    }
-	  }, {
-	    key: 'gameLost',
-	    value: function gameLost() {
-	      if (this.shipLives.length === 0) {
-	        this.intervals.forEach(function (int) {
-	          clearInterval(int);
-	        });
-	        this.restart();
-	      }
-	    }
-	  }, {
-	    key: 'unMountGame',
-	    value: function unMountGame() {
-	      this.intervals.forEach(function (int) {
-	        clearInterval(int);
-	      });
-	    }
-	  }, {
-	    key: 'drawAll',
-	    value: function drawAll() {
-	      this.drawScore();
-	      var allObjects = this.aliens.concat(this.ship, this.shipBullets, this.alienBullets, this.explosions, this.rocks, this.shipLives, this.specialAliens);
-	      allObjects.forEach(function (obj) {
-	        obj.draw();
-	      });
-	    }
-	  }, {
-	    key: 'moveAll',
-	    value: function moveAll() {
-	      this.clear();
-	      this.ship[0].moveShip();
-	      this.moveAlienBullets();
-	      this.moveShipBullets();
-	      this.wobbleAliens();
-	      this.moveRocks();
-	      this.drawAll();
-	      this.gameLost();
-	    }
-	  }, {
-	    key: 'setup',
-	    value: function setup() {
-	      this.makeShip();
-	      this.makeLives();
-	      this.makeAliens();
-	      this.makeSpecialAlien();
-	      this.makeRocks();
-	    }
-	  }, {
-	    key: 'play',
-	    value: function play() {
-
-	      this.regularSpawn = setInterval(this.makeAliens.bind(this), _utils2.default.alienSpawnRate);
-	      this.specialSpawn = setInterval(this.makeSpecialAlien.bind(this), _utils2.default.specialAlienSpawnRate);
-	      this.alienFire = setInterval(this.alienFire.bind(this), _utils2.default.alienbulletFrequency);
-	      this.timer = setInterval(this.moveAll.bind(this), _utils2.default.refreshRate);
-
-	      this.intervals.push(this.alienFire);
-	      this.intervals.push(this.regularSpawn);
-	      this.intervals.push(this.specialSpawn);
-	      this.intervals.push(this.timer);
-	    }
-	  }, {
-	    key: 'restart',
-	    value: function restart() {
-	      if (this.score > this.highScore) {
-	        localStorage.spaceInvadersHighScores = this.score.toString();
-	      }
-	      this.component.startGame(this.ctx);
-	    }
-	  }, {
+	  _createClass(StateManager, [{
 	    key: 'showMenu',
 	    value: function showMenu() {
-	      var _this5 = this;
-
-	      var image = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _images2.default.intro;
-
-	      this.clear();
-	      this.ctx.drawImage(image, 280, 300);
-	      var play = function play(e) {
-	        if (e.keyCode === 13) {
-	          _this5.setup();
-	          _this5.drawAll();
-	          _this5.play();
-	          window.removeEventListener('keydown', play);
-	        }
-	      };
-	      window.addEventListener("keydown", play);
+	      this.setMenuState();
+	      this.run();
+	    }
+	  }, {
+	    key: 'setMenuState',
+	    value: function setMenuState() {
+	      this.currentState = this.menuState;
+	      this.keyManager.addStartListener();
 	    }
 	  }, {
 	    key: 'addScoreListener',
 	    value: function addScoreListener(listener) {
-	      var _this6 = this;
+	      var _this = this;
 
-	      this.scoreListeners.push(listener);
+	      this.forceUpdate = listener;
 	      return {
 	        remove: function remove() {
-	          return _this6.scoreListeners.splice(_this6.scoreListeners.indexOf(listener), 1);
+	          delete _this.forceUpdate;
 	        }
 	      };
 	    }
+	  }, {
+	    key: 'preTick',
+	    value: function preTick() {
+	      this.currentState.preTick();
+	    }
+	  }, {
+	    key: 'tick',
+	    value: function tick() {
+	      this.currentState.tick();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      this.context.clearRect(0, 0, 800, 600);
+	      this.currentState.render();
+	    }
+	  }, {
+	    key: 'postRender',
+	    value: function postRender() {
+	      this.currentState.postRender();
+	    }
+	  }, {
+	    key: 'run',
+	    value: function run() {
+	      var _this2 = this;
+
+	      this.running = true;
+	      // let timeNow = Date.now(),
+	      //     millisecondsPerFrame = (1000/60),
+	      //     timeDelta = 0,
+	      //     nextTime = undefined
+	      this.interval = setInterval(function () {
+	        // nextTime = Date.now()
+	        // timeDelta += (nextTime - timeNow)
+	        // timeNow = nextTime
+	        //
+	        // if (timeDelta >= millisecondsPerFrame) {
+	        // this.preTick()
+	        _this2.forceUpdate();
+	        if (_this2.running) {
+	          // this.preTick()
+	          _this2.tick();
+	          _this2.render();
+	          // this.postRender()
+	        } else {
+	          clearInterval(_this2.interval);
+	        }
+	        // this.postRender()
+	        //   timeDelta -= millisecondsPerFrame
+	        // }
+	      }, 1000 / 60);
+	    }
 	  }]);
 
-	  return SpaceInvadersGame;
+	  return StateManager;
 	}();
 
-	module.exports = SpaceInvadersGame;
+	exports.default = StateManager;
 
 /***/ },
 /* 216 */
@@ -26586,7 +26298,21 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _gameState = __webpack_require__(217);
+
+	var _gameState2 = _interopRequireDefault(_gameState);
+
+	var _images = __webpack_require__(218);
+
+	var _images2 = _interopRequireDefault(_images);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -26594,39 +26320,1004 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var MovingObject = __webpack_require__(217);
-	var Bullet = __webpack_require__(219);
-	var Images = __webpack_require__(220);
-	var Utils = __webpack_require__(218);
+	var MenuState = function (_GameState) {
+	  _inherits(MenuState, _GameState);
 
-	var Ship = function (_MovingObject) {
-	  _inherits(Ship, _MovingObject);
+	  function MenuState(initialState) {
+	    _classCallCheck(this, MenuState);
 
-	  function Ship(params) {
+	    var _this = _possibleConstructorReturn(this, (MenuState.__proto__ || Object.getPrototypeOf(MenuState)).call(this, initialState));
+
+	    _this.sprite = _images2.default.intro;
+	    return _this;
+	  }
+
+	  _createClass(MenuState, [{
+	    key: 'tick',
+	    value: function tick() {}
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      this.stateManager.context.drawImage(this.sprite, 300, 300);
+	    }
+	  }]);
+
+	  return MenuState;
+	}(_gameState2.default);
+
+	exports.default = MenuState;
+
+/***/ },
+/* 217 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var GameState = function () {
+	  function GameState(initialState) {
+	    _classCallCheck(this, GameState);
+
+	    this.stateManager = initialState.stateManager;
+	  }
+
+	  _createClass(GameState, [{
+	    key: "preTick",
+	    value: function preTick() {}
+	  }, {
+	    key: "tick",
+	    value: function tick() {}
+	  }, {
+	    key: "render",
+	    value: function render() {}
+	  }, {
+	    key: "postRender",
+	    value: function postRender() {}
+	  }]);
+
+	  return GameState;
+	}();
+
+	exports.default = GameState;
+
+/***/ },
+/* 218 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var imageFiles = ['explosion', 'ship', 'ship_bullet', 'intro', 'red_invader', 'alien_bullet', 'green_invader', 'rock', 'gameover'];
+
+	var Images = {
+	  loading: 0,
+	  loadImages: function loadImages(ctx, startGame) {
+	    imageFiles.forEach(function (imageName) {
+	      var img = new Image();
+	      img.onload = function () {
+	        Images[imageName] = img;
+	        Images.loading += 1;
+	        ctx.fillText("LOADING...", 350, 300);
+	        if (Images.loading === imageFiles.length) {
+	          startGame();
+	        }
+	      };
+	      img.src = 'app/space_invaders_game/assets/images/' + imageName + '.png';
+	    });
+	  }
+	};
+
+	module.exports = Images;
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _gameState = __webpack_require__(217);
+
+	var _gameState2 = _interopRequireDefault(_gameState);
+
+	var _ship = __webpack_require__(220);
+
+	var _ship2 = _interopRequireDefault(_ship);
+
+	var _alien = __webpack_require__(224);
+
+	var _alien2 = _interopRequireDefault(_alien);
+
+	var _bullet = __webpack_require__(222);
+
+	var _bullet2 = _interopRequireDefault(_bullet);
+
+	var _rock = __webpack_require__(225);
+
+	var _rock2 = _interopRequireDefault(_rock);
+
+	var _explosion = __webpack_require__(223);
+
+	var _explosion2 = _interopRequireDefault(_explosion);
+
+	var _spaceInvadersUtils = __webpack_require__(226);
+
+	var _spaceInvadersUtils2 = _interopRequireDefault(_spaceInvadersUtils);
+
+	var _specialAlien = __webpack_require__(227);
+
+	var _specialAlien2 = _interopRequireDefault(_specialAlien);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PlayingState = function (_GameState) {
+	  _inherits(PlayingState, _GameState);
+
+	  function PlayingState(initialState) {
+	    _classCallCheck(this, PlayingState);
+
+	    var _this = _possibleConstructorReturn(this, (PlayingState.__proto__ || Object.getPrototypeOf(PlayingState)).call(this, initialState));
+
+	    _this.ship = [_this.makeShip()];
+	    _this.rock = [_this.makeRock()];
+	    _this.shipBullets = [];
+	    _this.alienBullets = [];
+	    _this.explosions = [];
+	    _this.aliens = _this.makeAliens();
+	    _this.setVectorForAlien = _this.setVectorFunction();
+	    _this.counter = 0;
+	    _this.shipLives = _this.stateManager.config.shipLives;
+	    _this.score = 0;
+	    return _this;
+	  }
+
+	  _createClass(PlayingState, [{
+	    key: 'makeShip',
+	    value: function makeShip() {
+	      return new _ship2.default({
+	        pos: Object.assign([], this.stateManager.config.shipStartPos),
+	        vector: [0, 0],
+	        stateManager: this.stateManager
+	      });
+	    }
+	  }, {
+	    key: 'makeRock',
+	    value: function makeRock() {
+	      return new _rock2.default({
+	        pos: Object.assign([], this.stateManager.config.rockStartPos),
+	        vector: [this.stateManager.config.rockSpeed, 0],
+	        stateManager: this.stateManager
+	      });
+	    }
+	  }, {
+	    key: 'makeAliens',
+	    value: function makeAliens() {
+	      var aliens = [];
+	      var alienGap = this.stateManager.config.alienGap;
+	      var alienStartPos = this.stateManager.config.alienStartPos;
+	      for (var i = alienStartPos; i < this.stateManager.gameWidth - 50; i += alienGap) {
+	        for (var j = 50; j < this.stateManager.gameHeight - 400; j += 70) {
+	          aliens.push(new _alien2.default({
+	            vector: [0, 0],
+	            pos: [i, j],
+	            stateManager: this.stateManager
+	          }));
+	        }
+	      }
+	      return aliens;
+	    }
+	  }, {
+	    key: 'joinEntities',
+	    value: function joinEntities() {
+	      return [].concat(this.rock, this.ship, this.shipBullets, this.alienBullets, this.aliens, this.explosions);
+	    }
+	  }, {
+	    key: 'setVectorFunction',
+	    value: function setVectorFunction() {
+	      var _this2 = this;
+
+	      var direction = 'right';
+	      return function () {
+	        _this2.aliens.forEach(function (alien) {
+	          alien.vector = direction === 'right' ? [1, 0] : [-1, 0];
+	          alien.pos[1] += 5;
+	        });
+	        direction = direction === 'right' ? 'left' : 'right';
+	      };
+	    }
+	  }, {
+	    key: 'addExplosion',
+	    value: function addExplosion(entity) {
+	      this.explosions.push(new _explosion2.default({
+	        pos: entity.pos,
+	        vector: [0, 0],
+	        stateManager: this.stateManager
+	      }));
+	    }
+	  }, {
+	    key: 'remove',
+	    value: function remove(entity) {
+	      if (entity.type === 'ShipBullet') {
+	        this.shipBullets.splice(this.shipBullets.indexOf(entity), 1);
+	      } else if (entity.type === 'AlienBullet') {
+	        this.alienBullets.splice(this.alienBullets.indexOf(entity), 1);
+	      } else if (entity.type === 'Alien') {
+	        this.aliens.splice(this.aliens.indexOf(entity), 1);
+	      }
+	    }
+	  }, {
+	    key: 'takeShipLife',
+	    value: function takeShipLife() {
+	      if (this.ship[0].isCollidable()) {
+	        this.addExplosion(this.ship[0]);
+	        this.ship[0].counter = 0;
+	        this.shipLives -= 1;
+	        this.ship[0].pos = Object.assign([], this.stateManager.config.shipStartPos);
+	      }
+	    }
+	  }, {
+	    key: 'shipCollisions',
+	    value: function shipCollisions() {
+	      var _this3 = this;
+
+	      this.collidesWithRock(this.ship[0]);
+	      this.alienBullets.concat(this.aliens).forEach(function (entity) {
+	        _this3.collidesWithRock(entity);
+	        var distance = _spaceInvadersUtils2.default.distance(entity.pos, _this3.ship[0].pos);
+	        if (distance <= entity.radius + _this3.ship[0].radius) {
+	          _this3.remove(entity);
+	          _this3.addExplosion(entity);
+	          _this3.takeShipLife();
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'collidesWithRock',
+	    value: function collidesWithRock(entity) {
+	      var collided = false;
+	      var distance = _spaceInvadersUtils2.default.distance(this.rock[0].pos, entity.pos);
+	      if (distance <= entity.radius + this.rock[0].radius) {
+	        collided = true;
+	      }
+	      if (entity.type === 'ShipBullet' && collided) {
+	        this.remove(entity);
+	        this.rock[0].vector[1] -= 1;
+	        this.addExplosion(entity);
+	      } else if (entity.type === 'AlienBullet' && collided) {
+	        this.remove(entity);
+	        this.addExplosion(entity);
+	        this.rock[0].vector[1] += 1;
+	      } else if (entity.type === 'Alien' && collided) {
+	        this.score += 100;
+	        this.remove(entity);
+	        this.addExplosion(entity);
+	      } else if (entity.type === 'Ship' && collided) {
+	        this.takeShipLife();
+	      }
+	    }
+	  }, {
+	    key: 'alienCollisions',
+	    value: function alienCollisions() {
+	      var _this4 = this;
+
+	      this.aliens.forEach(function (alien) {
+	        _this4.shipBullets.forEach(function (shipBullet) {
+	          _this4.collidesWithRock(shipBullet);
+	          var distance = _spaceInvadersUtils2.default.distance(alien.pos, shipBullet.pos);
+	          if (distance <= alien.radius + shipBullet.radius) {
+	            _this4.score += 100;
+	            _this4.remove(alien);
+	            _this4.remove(shipBullet);
+	            _this4.addExplosion(alien);
+	          }
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'checkCollisions',
+	    value: function checkCollisions() {
+	      this.shipCollisions();
+	      this.alienCollisions();
+	    }
+	  }, {
+	    key: 'spawnAliens',
+	    value: function spawnAliens() {
+	      if (this.counter % this.stateManager.config.respawnRate === 0) {
+	        this.aliens = this.aliens.concat(this.makeAliens());
+	      }
+	    }
+	  }, {
+	    key: 'isGameOver',
+	    value: function isGameOver() {
+	      if (this.shipLives <= 0) {
+	        this.shipLives = this.stateManager.config.shipLives;
+	        this.stateManager.setMenuState();
+	        return true;
+	      }
+	    }
+	  }, {
+	    key: 'tick',
+	    value: function tick() {
+	      if (this.counter % this.stateManager.config.alienWobble === 20) {
+	        this.setVectorForAlien();
+	      }
+	      this.spawnAliens();
+	      this.checkCollisions();
+	      this.joinEntities().forEach(function (entity) {
+	        return entity.tick();
+	      });
+	      this.counter += 1;
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      this.joinEntities().forEach(function (entity) {
+	        return entity.render();
+	      });
+	      this.isGameOver();
+	    }
+	  }, {
+	    key: 'postRender',
+	    value: function postRender() {
+	      this.joinEntities().forEach(function (entity) {
+	        return entity.postRender();
+	      });
+	    }
+	  }]);
+
+	  return PlayingState;
+	}(_gameState2.default);
+
+	exports.default = PlayingState;
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _entity = __webpack_require__(221);
+
+	var _entity2 = _interopRequireDefault(_entity);
+
+	var _bullet = __webpack_require__(222);
+
+	var _bullet2 = _interopRequireDefault(_bullet);
+
+	var _explosion = __webpack_require__(223);
+
+	var _explosion2 = _interopRequireDefault(_explosion);
+
+	var _images = __webpack_require__(218);
+
+	var _images2 = _interopRequireDefault(_images);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Ship = function (_Entity) {
+	  _inherits(Ship, _Entity);
+
+	  function Ship(initialState) {
 	    _classCallCheck(this, Ship);
 
-	    var _this = _possibleConstructorReturn(this, (Ship.__proto__ || Object.getPrototypeOf(Ship)).call(this, params));
+	    var _this = _possibleConstructorReturn(this, (Ship.__proto__ || Object.getPrototypeOf(Ship)).call(this, initialState));
 
-	    _this.leftPressed = false;
-	    _this.rightPressed = false;
-	    _this.upPressed = false;
-	    _this.downPressed = false;
-	    _this.spacePressed = false;
-	    _this.timeOut = 0;
-	    _this.invulnerabilityTimer = params.invulnerabilityTimer;
-	    _this.startShip();
+	    _this.sprite = _images2.default.ship;
+	    _this.type = 'Ship';
+	    _this.counter = 120;
+	    _this.gunCounter = 0;
+	    _this.radius = 25;
 	    return _this;
 	  }
 
 	  _createClass(Ship, [{
-	    key: 'startShip',
-	    value: function startShip() {
-	      document.addEventListener("keydown", this._handleKeyDown.bind(this));
-	      document.addEventListener("keyup", this._handleKeyUp.bind(this));
+	    key: 'updatePosition',
+	    value: function updatePosition() {
+	      var keys = this.stateManager.keyManager;
+	      var conf = this.stateManager.config;
+	      if (keys.leftPressed && this.pos[0] - this.radius >= 0) {
+	        this.pos[0] -= conf.shipMoveSpeed;
+	      }
+	      if (keys.downPressed && this.pos[1] + this.radius <= this.stateManager.gameHeight) {
+	        this.pos[1] += conf.shipMoveSpeed;
+	      }
+	      if (keys.rightPressed && this.pos[0] + this.radius <= this.stateManager.gameWidth) {
+	        this.pos[0] += conf.shipMoveSpeed;
+	      }
+	      if (keys.upPressed && this.pos[1] - this.radius >= 0) {
+	        this.pos[1] -= conf.shipMoveSpeed;
+	      }
 	    }
 	  }, {
-	    key: '_handleKeyDown',
-	    value: function _handleKeyDown(e) {
+	    key: 'fire',
+	    value: function fire() {
+	      var spacePressed = this.stateManager.keyManager.spacePressed;
+	      if (spacePressed && this.gunCounter % 20 === 10) {
+	        var bullet = new _bullet2.default({
+	          stateManager: this.stateManager,
+	          pos: Object.assign([], this.pos),
+	          vector: [0, -this.stateManager.config.shipBulletSpeed],
+	          type: "ShipBullet"
+	        });
+	        this.stateManager.playingState.shipBullets.push(bullet);
+	      } else if (!spacePressed) {
+	        this.gunCounter = 5;
+	      }
+	    }
+	  }, {
+	    key: 'isCollidable',
+	    value: function isCollidable() {
+	      return this.counter >= 120;
+	    }
+	  }, {
+	    key: 'draw',
+	    value: function draw() {
+	      this.stateManager.context.drawImage(this.sprite, this.pos[0] - 25, this.pos[1] - 25, 50, 50);
+	    }
+	  }, {
+	    key: 'tick',
+	    value: function tick() {
+	      this.counter += 1;
+	      this.gunCounter += 1;
+	      this.updatePosition();
+	      this.fire();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      if (this.counter > 120 || this.counter % 5 === 0) {
+	        this.draw();
+	      }
+	    }
+	  }]);
+
+	  return Ship;
+	}(_entity2.default);
+
+	exports.default = Ship;
+
+/***/ },
+/* 221 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Entity = function () {
+	  function Entity(initialState) {
+	    _classCallCheck(this, Entity);
+
+	    this.type = initialState.type;
+	    this.pos = initialState.pos;
+	    this.vector = initialState.vector;
+	    this.sprite = initialState.sprite;
+	    this.stateManager = initialState.stateManager;
+	    this.radius = this.stateManager.config.entityRadius;
+	  }
+
+	  _createClass(Entity, [{
+	    key: "isOutsideHorizontal",
+	    value: function isOutsideHorizontal() {
+	      return this.pos[0] - this.radius <= 0 || this.pos[0] + this.radius >= this.stateManager.gameWidth;
+	    }
+	  }, {
+	    key: "isOutsideVertical",
+	    value: function isOutsideVertical() {
+	      return this.pos[1] - this.radius <= 0 || this.pos[1] + this.radius >= this.stateManager.gameHeight;
+	    }
+	  }, {
+	    key: "preTick",
+	    value: function preTick() {}
+	  }, {
+	    key: "tick",
+	    value: function tick() {
+	      this.pos[0] += this.vector[0];
+	      this.pos[1] += this.vector[1];
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      this.stateManager.context.drawImage(this.sprite, this.pos[0], this.pos[1], 50, 50);
+	    }
+	  }, {
+	    key: "postRender",
+	    value: function postRender() {
+	      var ctx = this.stateManager.context;
+	      ctx.beginPath();
+	      ctx.arc(this.pos[0], this.pos[1], this.radius, 0, Math.PI * 2, true);
+	      ctx.stroke();
+	    }
+	  }]);
+
+	  return Entity;
+	}();
+
+	exports.default = Entity;
+
+/***/ },
+/* 222 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _entity = __webpack_require__(221);
+
+	var _entity2 = _interopRequireDefault(_entity);
+
+	var _images = __webpack_require__(218);
+
+	var _images2 = _interopRequireDefault(_images);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Bullet = function (_Entity) {
+	  _inherits(Bullet, _Entity);
+
+	  function Bullet(initialState) {
+	    _classCallCheck(this, Bullet);
+
+	    var _this = _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, initialState));
+
+	    _this.setSprite();
+	    _this.radius = 5;
+	    return _this;
+	  }
+
+	  _createClass(Bullet, [{
+	    key: 'setSprite',
+	    value: function setSprite() {
+	      if (this.type === 'AlienBullet') {
+	        this.sprite = _images2.default.alien_bullet;
+	        this.vector = [0, this.stateManager.config.alienBulletSpeed];
+	      } else if (this.type === 'ShipBullet') {
+	        this.sprite = _images2.default.ship_bullet;
+	        this.vector = [0, -this.stateManager.config.shipBulletSpeed];
+	      }
+	    }
+	  }, {
+	    key: 'checkIfVisible',
+	    value: function checkIfVisible() {
+	      if (this.isOutsideHorizontal()) {
+	        this.stateManager.playingState.remove(this);
+	      }
+	    }
+	  }, {
+	    key: 'tick',
+	    value: function tick() {
+	      this.pos[0] += this.vector[0];
+	      this.pos[1] += this.vector[1];
+	      this.checkIfVisible();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      this.stateManager.context.drawImage(this.sprite, this.pos[0] - 20, this.pos[1] - 20, 50, 50);
+	    }
+	  }]);
+
+	  return Bullet;
+	}(_entity2.default);
+
+	exports.default = Bullet;
+
+/***/ },
+/* 223 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _entity = __webpack_require__(221);
+
+	var _entity2 = _interopRequireDefault(_entity);
+
+	var _images = __webpack_require__(218);
+
+	var _images2 = _interopRequireDefault(_images);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Explosion = function (_Entity) {
+	  _inherits(Explosion, _Entity);
+
+	  function Explosion(initialState) {
+	    _classCallCheck(this, Explosion);
+
+	    var _this = _possibleConstructorReturn(this, (Explosion.__proto__ || Object.getPrototypeOf(Explosion)).call(this, initialState));
+
+	    _this.sprite = _images2.default.explosion;
+	    _this.frameX = 0;
+	    _this.frameY = 0;
+	    _this.frameWidth = 128;
+	    _this.frameHeight = 128;
+	    _this.counter = 0;
+	    return _this;
+	  }
+
+	  _createClass(Explosion, [{
+	    key: 'tick',
+	    value: function tick() {
+	      this.counter += 1;
+	    }
+	  }, {
+	    key: 'updateSpriteFrame',
+	    value: function updateSpriteFrame() {
+	      this.frameX += this.frameWidth;
+
+	      if (this.frameX >= 640) {
+	        this.frameX = 0;
+	        this.frameY += this.frameHeight;
+	      }
+
+	      if (this.frameY > 1152) {
+	        this.stateManager.playingState.explosions.shift();
+	      }
+	    }
+	  }, {
+	    key: 'draw',
+	    value: function draw() {
+	      this.stateManager.context.drawImage(this.sprite, this.frameX, this.frameY, this.frameWidth, this.frameHeight, this.pos[0] - 60, this.pos[1] - 60, this.frameWidth, this.frameHeight);
+
+	      if (this.counter % 3 === 0) {
+	        this.updateSpriteFrame();
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      this.draw();
+	    }
+	  }]);
+
+	  return Explosion;
+	}(_entity2.default);
+
+	exports.default = Explosion;
+
+/***/ },
+/* 224 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _entity = __webpack_require__(221);
+
+	var _entity2 = _interopRequireDefault(_entity);
+
+	var _images = __webpack_require__(218);
+
+	var _images2 = _interopRequireDefault(_images);
+
+	var _bullet = __webpack_require__(222);
+
+	var _bullet2 = _interopRequireDefault(_bullet);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Alien = function (_Entity) {
+	  _inherits(Alien, _Entity);
+
+	  function Alien(initialState) {
+	    _classCallCheck(this, Alien);
+
+	    var _this = _possibleConstructorReturn(this, (Alien.__proto__ || Object.getPrototypeOf(Alien)).call(this, initialState));
+
+	    _this.sprite = _images2.default.green_invader;
+	    _this.type = 'Alien';
+	    return _this;
+	  }
+
+	  _createClass(Alien, [{
+	    key: 'fireBullet',
+	    value: function fireBullet() {
+	      var bullet = new _bullet2.default({
+	        pos: Object.assign([], this.pos),
+	        stateManager: this.stateManager,
+	        type: 'AlienBullet'
+	      });
+	      this.stateManager.playingState.alienBullets.push(bullet);
+	    }
+	  }, {
+	    key: 'tick',
+	    value: function tick() {
+	      if (Math.floor(Math.random() * this.stateManager.config.alienBulletFrequency) === 1) {
+	        this.fireBullet();
+	      }
+	      this.pos[0] += this.vector[0];
+	      this.pos[1] += this.vector[1];
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      this.stateManager.context.drawImage(this.sprite, this.pos[0] - 25, this.pos[1] - 25, 50, 50);
+	    }
+	  }]);
+
+	  return Alien;
+	}(_entity2.default);
+
+	exports.default = Alien;
+
+/***/ },
+/* 225 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _entity = __webpack_require__(221);
+
+	var _entity2 = _interopRequireDefault(_entity);
+
+	var _images = __webpack_require__(218);
+
+	var _images2 = _interopRequireDefault(_images);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Rock = function (_Entity) {
+	  _inherits(Rock, _Entity);
+
+	  function Rock(initialState) {
+	    _classCallCheck(this, Rock);
+
+	    var _this = _possibleConstructorReturn(this, (Rock.__proto__ || Object.getPrototypeOf(Rock)).call(this, initialState));
+
+	    _this.sprite = _images2.default.rock;
+	    _this.frameX = 0;
+	    _this.frameY = 0;
+	    _this.frameWidth = 256;
+	    _this.frameHeight = 256;
+	    _this.counter = 0;
+	    _this.radius = 40;
+	    return _this;
+	  }
+
+	  _createClass(Rock, [{
+	    key: 'draw',
+	    value: function draw() {
+	      this.stateManager.context.drawImage(this.sprite, this.frameX, this.frameY, this.frameWidth, this.frameHeight, this.pos[0] - 65, this.pos[1] - 65, this.frameWidth / 2, this.frameHeight / 2);
+
+	      if (this.counter % 3 === 0) {
+	        this.updateSpriteFrame();
+	      }
+	    }
+	  }, {
+	    key: 'updateSpriteFrame',
+	    value: function updateSpriteFrame() {
+	      this.frameX += this.frameWidth;
+	      if (this.frameX >= 2048) {
+	        this.frameX = 0;
+	        this.frameY += this.frameHeight;
+	      }
+
+	      if (this.frameY >= 2048 / 2) {
+	        this.frameY = 0;
+	      }
+	    }
+	  }, {
+	    key: 'checkWalls',
+	    value: function checkWalls() {
+	      if (this.isOutsideHorizontal()) {
+	        this.vector[0] = -this.vector[0];
+	      }
+
+	      if (this.isOutsideVertical()) {
+	        this.vector[1] = -this.vector[1];
+	      }
+	    }
+	  }, {
+	    key: 'updateVerticalPosition',
+	    value: function updateVerticalPosition() {
+	      if (Math.abs(this.vector[1]) > 5) {
+	        this.vector[1] = this.vector[1] - this.vector[1] % 5;
+	      }
+	    }
+	  }, {
+	    key: 'tick',
+	    value: function tick() {
+	      this.checkWalls();
+	      this.updateVerticalPosition();
+	      this.pos[0] += this.vector[0];
+	      this.pos[1] += this.vector[1];
+	      this.counter += 1;
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      this.draw();
+	    }
+	  }]);
+
+	  return Rock;
+	}(_entity2.default);
+
+	exports.default = Rock;
+
+/***/ },
+/* 226 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var SpaceInvadersUtils = {
+	  distance: function distance(posOne, posTwo) {
+	    return Math.sqrt(Math.pow(posOne[0] - posTwo[0], 2) + Math.pow(posOne[1] - posTwo[1], 2));
+	  }
+	};
+
+	exports.default = SpaceInvadersUtils;
+
+/***/ },
+/* 227 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _alien = __webpack_require__(224);
+
+	var _alien2 = _interopRequireDefault(_alien);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SpecialAlien = function (_Alien) {
+	  _inherits(SpecialAlien, _Alien);
+
+	  function SpecialAlien(initialState) {
+	    _classCallCheck(this, SpecialAlien);
+
+	    return _possibleConstructorReturn(this, (SpecialAlien.__proto__ || Object.getPrototypeOf(SpecialAlien)).call(this, initialState));
+	  }
+
+	  return SpecialAlien;
+	}(_alien2.default);
+
+	exports.default = SpecialAlien;
+
+/***/ },
+/* 228 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var KeyManager = function () {
+	  function KeyManager(config) {
+	    _classCallCheck(this, KeyManager);
+
+	    this.stateManager = config.stateManager;
+	    this.upPressed = false;
+	    this.downPressed = false;
+	    this.leftPressed = false;
+	    this.rightPressed = false;
+	    this.spacePressed = false;
+	    this.init();
+	  }
+
+	  _createClass(KeyManager, [{
+	    key: 'init',
+	    value: function init() {
+	      window.addEventListener('keyup', this.handleKeyUp.bind(this));
+	      window.addEventListener('keydown', this.handleKeyDown.bind(this));
+	    }
+	  }, {
+	    key: 'addStartListener',
+	    value: function addStartListener() {
+	      var _this = this;
+
+	      var start = function start(e) {
+	        if (e.keyCode === 13) {
+	          _this.stateManager.currentState = _this.stateManager.playingState;
+	          window.removeEventListener('keydown', start);
+	        }
+	      };
+	      window.addEventListener('keydown', start);
+	    }
+	  }, {
+	    key: 'handleKeyDown',
+	    value: function handleKeyDown(e) {
 	      if (e.keyCode === 65) {
 	        this.leftPressed = true;
 	      } else if (e.keyCode === 68) {
@@ -26644,8 +27335,8 @@
 	      }
 	    }
 	  }, {
-	    key: '_handleKeyUp',
-	    value: function _handleKeyUp(e) {
+	    key: 'handleKeyUp',
+	    value: function handleKeyUp(e) {
 	      if (e.keyCode === 65) {
 	        this.leftPressed = false;
 	      } else if (e.keyCode === 68) {
@@ -26659,455 +27350,47 @@
 	      }
 
 	      if (e.keyCode === 32) {
-	        this.timeOut = 0;
 	        this.spacePressed = false;
 	      }
 	    }
-	  }, {
-	    key: 'fire',
-	    value: function fire() {
-	      var params = {};
-	      params.x_pos = this.x_pos;
-	      params.y_pos = this.y_pos;
-	      params.game = this.game;
-	      params.image = Images.ship_bullet;
-	      var bullet = new Bullet(params);
-	      this.game.shipBullets.push(bullet);
-	    }
-	  }, {
-	    key: 'moveShip',
-	    value: function moveShip() {
-	      if (this.leftPressed === true && this.x_pos > this.radius) {
-	        this.moveObj(Utils.shipLeft);
-	      }
-	      if (this.rightPressed === true && this.x_pos < this.game.ctx.canvas.width - this.radius) {
-	        this.moveObj(Utils.shipRight);
-	      }
-	      if (this.upPressed === true && this.y_pos > this.radius) {
-	        this.moveObj(Utils.shipUp);
-	      }
-	      if (this.downPressed === true && this.y_pos < this.game.ctx.canvas.height - this.radius) {
-	        this.moveObj(Utils.shipDown);
-	      }
-	      if (this.spacePressed === true) {
-	        this.timeOut = this.timeOut % 10;
-	        if (this.timeOut % 10 === 0) {
-	          this.fire();
-	        }
-	        this.timeOut += 1;
-	      }
-	    }
-	  }, {
-	    key: 'draw',
-	    value: function draw() {
-	      // let x = this.x_pos;
-	      // let y = this.y_pos;
-	      // this.game.ctx.beginPath();
-	      // this.game.ctx.arc(x, y, this.radius, 0, Math.PI*2, true);
-	      // this.game.ctx.stroke();
-	      if (this.invulnerabilityTimer % 3 === 0) {
-	        this.showImage();
-	      }
-
-	      if (this.invulnerabilityTimer > 0) {
-	        this.invulnerabilityTimer -= 1;
-	      }
-	    }
 	  }]);
 
-	  return Ship;
-	}(MovingObject);
-
-	module.exports = Ship;
-
-/***/ },
-/* 217 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _utils = __webpack_require__(218);
-
-	var _utils2 = _interopRequireDefault(_utils);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var MovingObject = function () {
-	  function MovingObject(params) {
-	    _classCallCheck(this, MovingObject);
-
-	    this.image = params.image;
-	    this.x_pos = params.x_pos;
-	    this.y_pos = params.y_pos;
-	    this.game = params.game;
-	    this.radius = params.radius;
-	  }
-
-	  // draw circles to see collisions and test
-
-
-	  _createClass(MovingObject, [{
-	    key: 'draw',
-	    value: function draw() {
-	      this.showImage();
-	    }
-	  }, {
-	    key: 'showImage',
-	    value: function showImage() {
-	      this.game.ctx.drawImage(this.image, this.x_pos - _utils2.default.offsetObject, this.y_pos - _utils2.default.offsetObject, 50, 50);
-	    }
-	  }, {
-	    key: 'moveObj',
-	    value: function moveObj(vector) {
-	      this.x_pos += vector.x;
-	      this.y_pos += vector.y;
-	    }
-	  }, {
-	    key: 'collideWith',
-	    value: function collideWith(otherObj) {
-	      var distance = Math.sqrt(Math.pow(this.x_pos - otherObj.x_pos, 2) + Math.pow(this.y_pos - otherObj.y_pos, 2));
-	      if (distance < this.radius + otherObj.radius) {
-	        return true;
-	      }
-	      return false;
-	    }
-	  }]);
-
-	  return MovingObject;
+	  return KeyManager;
 	}();
 
-	module.exports = MovingObject;
+	exports.default = KeyManager;
 
 /***/ },
-/* 218 */
+/* 229 */
 /***/ function(module, exports) {
 
 	"use strict";
 
-	module.exports = {
-	  // alien options
-	  alienRadius: 25,
-	  specialAlienMove: 5,
-
-	  alienRight: { x: 5, y: 0 },
-	  alienLeft: { x: -5, y: 0 },
-	  alienDown: { x: 0, y: 10 },
-	  alienSpawnRate: 13000,
-	  specialAlienSpawnRate: 4000,
-
-	  alienBullet: { x: 0, y: 12 },
-
-	  hoverGap: 40,
-	  bulletRadius: 3,
-	  alienbulletFrequency: 300,
-
-	  // ship options
-	  shipLives: 5,
-	  shipRight: { x: 6, y: 0 },
-	  shipLeft: { x: -6, y: 0 },
-	  shipDown: { x: 0, y: 6 },
-	  shipUp: { x: 0, y: -6 },
-	  shipBullet: { x: 0, y: -20 },
-	  invulnerabilityTimer: 120,
-
-	  // rock options
-	  rockRadius: 35,
-	  offsetRock: 60,
-
-	  // canvas options
-	  canvasWidth: 800,
-	  canvasHeight: 600,
-	  refreshRate: 25,
-
-	  // image options
-	  offsetObject: 25,
-	  offsetExplosion: 50
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var SpaceInvadersConfig = {
+	  gameWidth: 800,
+	  gameHeight: 600,
+	  entityRadius: 20,
+	  shipStartPos: [400, 500],
+	  rockStartPos: [400, 300],
+	  shipMoveSpeed: 3,
+	  rockSpeed: 2,
+	  shipBulletSpeed: 2,
+	  alienBulletSpeed: 2,
+	  alienBulletFrequency: 1000,
+	  alienGap: 95,
+	  alienWobble: 60,
+	  alienStartPos: 40,
+	  respawnRate: 2000,
+	  shipLives: 5
 	};
 
-/***/ },
-/* 219 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var MovingObject = __webpack_require__(217);
-	var Utils = __webpack_require__(218);
-
-	var Bullet = function (_MovingObject) {
-	  _inherits(Bullet, _MovingObject);
-
-	  function Bullet(params) {
-	    _classCallCheck(this, Bullet);
-
-	    params.radius = Utils.bulletRadius;
-	    return _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, params));
-	  }
-
-	  return Bullet;
-	}(MovingObject);
-
-	module.exports = Bullet;
+	exports.default = SpaceInvadersConfig;
 
 /***/ },
-/* 220 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var imageFiles = ['explosion', 'ship', 'ship_bullet', 'intro', 'red_invader', 'alien_bullet', 'green_invader', 'rocks', 'gameover'];
-
-	var Images = {
-	  loading: 0,
-	  loadImages: function loadImages(ctx, startGame) {
-	    imageFiles.forEach(function (imageName) {
-	      var img = new Image();
-	      img.onload = function () {
-	        Images[imageName] = img;
-	        Images.loading += 1;
-	        ctx.fillText("LOADING...", 350, 300);
-	        if (Images.loading === imageFiles.length) {
-	          startGame();
-	        }
-	      };
-	      img.src = 'app/space_invaders_game/images/' + imageName + '.png';
-	    });
-	  }
-	};
-
-	module.exports = Images;
-
-/***/ },
-/* 221 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Images = __webpack_require__(220);
-	var MovingObject = __webpack_require__(217);
-	var Utils = __webpack_require__(218);
-
-	var SpaceRock = function (_MovingObject) {
-	  _inherits(SpaceRock, _MovingObject);
-
-	  function SpaceRock(params) {
-	    _classCallCheck(this, SpaceRock);
-
-	    var _this = _possibleConstructorReturn(this, (SpaceRock.__proto__ || Object.getPrototypeOf(SpaceRock)).call(this, params));
-
-	    _this.velocity = { x: 4, y: -1 };
-	    _this.frameWidth = 256;
-	    _this.frameHeight = 256;
-	    _this.ctx = params.game.ctx;
-	    _this.frameX = 0;
-	    _this.frameY = 0;
-	    _this.radius = Utils.rockRadius;
-	    _this.image = Images.rocks;
-	    return _this;
-	  }
-
-	  _createClass(SpaceRock, [{
-	    key: 'draw',
-	    value: function draw() {
-	      this.ctx.drawImage(this.image, this.frameX, this.frameY, this.frameWidth, this.frameHeight, this.x_pos - Utils.offsetRock, this.y_pos - Utils.offsetRock, this.frameWidth / 2, this.frameHeight / 2);
-
-	      this.frameX += this.frameWidth;
-
-	      if (this.frameX >= 2048) {
-	        this.frameX = 0;
-	        this.frameY += this.frameHeight;
-	      }
-
-	      if (this.frameY >= 2048 / 2) {
-	        this.frameY = 0;
-	      }
-	    }
-	  }, {
-	    key: 'moveObj',
-	    value: function moveObj() {
-	      if (this.x_pos >= Utils.canvasWidth - this.radius || this.x_pos <= 0 + this.radius) {
-	        var newVel = -this.velocity.x;
-	        this.velocity.x = newVel;
-	      }
-	      this.x_pos += this.velocity.x;
-	      if (this.y_pos >= Utils.canvasHeight - this.radius || this.y_pos <= 0 + this.radius) {
-	        var _newVel = -this.velocity.y;
-	        this.velocity.y = _newVel;
-	      }
-	      this.y_pos += this.velocity.y;
-	    }
-	  }]);
-
-	  return SpaceRock;
-	}(MovingObject);
-
-	module.exports = SpaceRock;
-
-/***/ },
-/* 222 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Images = __webpack_require__(220);
-
-	var Explosion = function () {
-	  function Explosion(params) {
-	    _classCallCheck(this, Explosion);
-
-	    this.pos = params.pos;
-	    this.frameWidth = params.frameWidth;
-	    this.frameHeight = params.frameHeight;
-	    this.game = params.game;
-	    this.ctx = params.game.ctx;
-	    this.frameX = params.frameX;
-	    this.frameY = params.frameY;
-	    this.image = Images.explosion;
-	  }
-
-	  _createClass(Explosion, [{
-	    key: 'draw',
-	    value: function draw() {
-	      this.ctx.drawImage(this.image, this.frameX, this.frameY, this.frameWidth, this.frameHeight, this.pos.x, this.pos.y, this.frameWidth, this.frameHeight);
-
-	      this.frameX += this.frameWidth;
-
-	      if (this.frameX >= 640) {
-	        this.frameX = 0;
-	        this.frameY += this.frameHeight;
-	      }
-
-	      if (this.frameY > 1152) {
-	        this.game.explosions.shift();
-	      }
-	    }
-	  }]);
-
-	  return Explosion;
-	}();
-
-	module.exports = Explosion;
-
-/***/ },
-/* 223 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var MovingObject = __webpack_require__(217);
-	var Bullet = __webpack_require__(219);
-	var Images = __webpack_require__(220);
-	var Utils = __webpack_require__(218);
-
-	var Alien = function (_MovingObject) {
-	  _inherits(Alien, _MovingObject);
-
-	  function Alien(params) {
-	    _classCallCheck(this, Alien);
-
-	    var _this = _possibleConstructorReturn(this, (Alien.__proto__ || Object.getPrototypeOf(Alien)).call(this, params));
-
-	    _this.frameWidth = params.frameWidth;
-	    _this.frameHeight = params.frameHeight;
-	    _this.ctx = params.game.ctx;
-	    _this.frameX = params.frameX;
-	    _this.frameY = params.frameY;
-	    _this.image = Images.green_invader;
-	    return _this;
-	  }
-
-	  _createClass(Alien, [{
-	    key: "fire",
-	    value: function fire() {
-	      var params = {};
-	      params.image = Images.alien_bullet;
-	      params.x_pos = this.x_pos;
-	      params.y_pos = this.y_pos;
-	      params.game = this.game;
-	      var bullet = new Bullet(params);
-	      this.game.alienBullets.push(bullet);
-	    }
-	  }]);
-
-	  return Alien;
-	}(MovingObject);
-
-	module.exports = Alien;
-
-/***/ },
-/* 224 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Alien = __webpack_require__(223);
-	var Images = __webpack_require__(220);
-	var Utils = __webpack_require__(218);
-
-	var SpecialAlien = function (_Alien) {
-	  _inherits(SpecialAlien, _Alien);
-
-	  function SpecialAlien(params) {
-	    _classCallCheck(this, SpecialAlien);
-
-	    var _this = _possibleConstructorReturn(this, (SpecialAlien.__proto__ || Object.getPrototypeOf(SpecialAlien)).call(this, params));
-
-	    _this.image = Images.red_invader;
-	    _this.move_x = params.move_x;
-	    return _this;
-	  }
-
-	  _createClass(SpecialAlien, [{
-	    key: 'moveObj',
-	    value: function moveObj() {
-	      this.x_pos += this.move_x;
-	    }
-	  }]);
-
-	  return SpecialAlien;
-	}(Alien);
-
-	module.exports = SpecialAlien;
-
-/***/ },
-/* 225 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27158,8 +27441,8 @@
 	    key: 'render',
 	    value: function render() {
 	      var game = this.props.game;
-	      var shipLives = game ? Array(game.shipLives.length).fill().map(function (el, idx) {
-	        return _react2.default.createElement('img', { key: idx, src: './app/space_invaders_game/images/ship.png' });
+	      var shipLives = game ? Array(game.playingState.shipLives).fill().map(function (el, idx) {
+	        return _react2.default.createElement('img', { key: idx, src: './app/space_invaders_game/assets/images/ship.png' });
 	      }) : undefined;
 
 	      var score = _react2.default.createElement(
@@ -27170,7 +27453,7 @@
 	        ' ',
 	        _react2.default.createElement('br', null),
 	        'Current Score: ',
-	        game ? game.score : undefined,
+	        game ? game.currentState.score : undefined,
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'left-panel-lives' },
@@ -27197,7 +27480,7 @@
 	module.exports = LeftPanelSpaceInvaders;
 
 /***/ },
-/* 226 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27212,7 +27495,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _left_panel_intro = __webpack_require__(227);
+	var _left_panel_intro = __webpack_require__(232);
 
 	var _left_panel_intro2 = _interopRequireDefault(_left_panel_intro);
 
@@ -27306,7 +27589,7 @@
 	exports.default = IntroView;
 
 /***/ },
-/* 227 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

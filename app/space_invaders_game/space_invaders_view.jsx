@@ -1,6 +1,6 @@
 import React from 'React'
-import SpaceInvadersGame from './space_invaders_game'
-import Images from './images'
+import StateManager from './stateManager'
+import Images from './assets/images'
 import LeftPanelSpaceInvaders from './left_panel_space_invaders.jsx'
 
 let imagesLoaded = false;
@@ -16,7 +16,7 @@ class SpaceInvadersView extends React.Component {
     let ctx = canvas.getContext('2d');
     ctx.font = "24px serif";
     ctx.fillStyle = "#fff";
-    ctx.strokeStyle = "transparent";
+    // ctx.strokeStyle = "black";
 
     if (!localStorage.highScores) {
       localStorage.highScores = "0";
@@ -33,14 +33,14 @@ class SpaceInvadersView extends React.Component {
   }
 
   startGame(ctx) {
-    this.state.game = new SpaceInvadersGame(ctx, this)
+    this.state.game = new StateManager({ context: ctx, reactView: this })
     this.state.game.showMenu()
     this.panel = <LeftPanelSpaceInvaders game={this.state.game} />
     this.forceUpdate()
   }
 
   componentWillUnmount() {
-    this.state.game.unMountGame()
+    // this.state.game.unMountGame()
   }
 
   render() {

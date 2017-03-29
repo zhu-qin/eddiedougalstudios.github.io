@@ -20,14 +20,14 @@ class LeftPanelSpaceInvaders extends React.Component {
 
   render() {
     let game = this.props.game
-    let shipLives = game ? Array(game.shipLives.length).fill().map((el, idx) => {
-      return <img key={idx} src="./app/space_invaders_game/images/ship.png"></img>
+    let shipLives = game ? Array(game.playingState.shipLives).fill().map((el, idx) => {
+      return <img key={idx} src="./app/space_invaders_game/assets/images/ship.png"></img>
     }) : undefined
 
     let score = (
       <div className={'left-panel-score'}>
-          High Score: {localStorage.spaceInvadersHighScores} <br></br>
-          Current Score: {game ? game.score : undefined}
+        High Score: {localStorage.spaceInvadersHighScores} <br></br>
+        Current Score: {game ? game.currentState.score : undefined}
           <div className={'left-panel-lives'}>
           {shipLives}
           </div>
