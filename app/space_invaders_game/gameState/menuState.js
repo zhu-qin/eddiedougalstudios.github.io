@@ -12,7 +12,7 @@ class MenuState extends GameState {
   }
 
   render() {
-    this.stateManager.context.drawImage(this.sprite, 300, 300)
+    this.stateManager.context.drawImage(this.sprite, 280, 300)
   }
 }
 

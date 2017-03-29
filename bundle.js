@@ -26344,7 +26344,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      this.stateManager.context.drawImage(this.sprite, 300, 300);
+	      this.stateManager.context.drawImage(this.sprite, 280, 300);
 	    }
 	  }]);
 
@@ -26532,7 +26532,7 @@
 	  }, {
 	    key: 'joinEntities',
 	    value: function joinEntities() {
-	      return [].concat(this.rock, this.ship, this.shipBullets, this.alienBullets, this.aliens, this.explosions);
+	      return [].concat(this.rock, this.ship, this.aliens, this.shipBullets, this.alienBullets, this.explosions);
 	    }
 	  }, {
 	    key: 'setVectorFunction',
@@ -26664,11 +26664,11 @@
 	      if (this.counter % this.stateManager.config.alienWobble === 20) {
 	        this.setVectorForAlien();
 	      }
-	      this.spawnAliens();
-	      this.checkCollisions();
 	      this.joinEntities().forEach(function (entity) {
 	        return entity.tick();
 	      });
+	      this.checkCollisions();
+	      this.spawnAliens();
 	      this.counter += 1;
 	    }
 	  }, {

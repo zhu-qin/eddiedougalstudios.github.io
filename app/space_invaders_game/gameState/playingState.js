@@ -58,9 +58,9 @@ class PlayingState extends GameState {
     return [].concat(
       this.rock,
       this.ship,
+      this.aliens,
       this.shipBullets,
       this.alienBullets,
-      this.aliens,
       this.explosions
     )
   }
@@ -179,9 +179,9 @@ class PlayingState extends GameState {
     if (this.counter%this.stateManager.config.alienWobble === 20) {
       this.setVectorForAlien()
     }
-    this.spawnAliens()
-    this.checkCollisions()
     this.joinEntities().forEach((entity) => entity.tick())
+    this.checkCollisions()
+    this.spawnAliens()
     this.counter += 1
   }
 
