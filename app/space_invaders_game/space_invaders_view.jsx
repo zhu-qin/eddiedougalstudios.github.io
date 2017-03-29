@@ -40,7 +40,7 @@ class SpaceInvadersView extends React.Component {
   }
 
   componentWillUnmount() {
-    // this.state.game.unMountGame()
+    this.state.game.unMountGame()
   }
 
   render() {

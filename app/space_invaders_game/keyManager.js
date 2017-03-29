@@ -10,8 +10,14 @@ class KeyManager {
   }
 
   init() {
-    window.addEventListener('keyup', this.handleKeyUp.bind(this))
-    window.addEventListener('keydown', this.handleKeyDown.bind(this))
+    let keyUp = this.handleKeyUp.bind(this)
+    let keyDown = this.handleKeyDown.bind(this)
+    window.addEventListener('keyup', keyUp)
+    window.addEventListener('keydown', keyDown)
+    this.clearKeyListeners = () => {
+      window.removeEventListener('keyup', keyUp)
+      window.removeEventListener('keydown', keyDown)
+    }
   }
 
   addStartListener() {

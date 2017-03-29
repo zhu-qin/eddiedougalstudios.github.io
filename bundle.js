@@ -22564,7 +22564,7 @@
 	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
-	      // this.state.game.unMountGame()
+	      this.state.game.unMountGame();
 	    }
 	  }, {
 	    key: 'render',
@@ -26216,6 +26216,12 @@
 	      this.run();
 	    }
 	  }, {
+	    key: 'unMountGame',
+	    value: function unMountGame() {
+	      this.running = false;
+	      this.keyManager.clearKeyListeners();
+	    }
+	  }, {
 	    key: 'setMenuState',
 	    value: function setMenuState() {
 	      this.currentState = this.menuState;
@@ -26271,8 +26277,8 @@
 	        //
 	        // if (timeDelta >= millisecondsPerFrame) {
 	        // this.preTick()
-	        _this2.forceUpdate();
 	        if (_this2.running) {
+	          _this2.forceUpdate();
 	          // this.preTick()
 	          _this2.tick();
 	          _this2.render();
@@ -27299,8 +27305,14 @@
 	  _createClass(KeyManager, [{
 	    key: 'init',
 	    value: function init() {
-	      window.addEventListener('keyup', this.handleKeyUp.bind(this));
-	      window.addEventListener('keydown', this.handleKeyDown.bind(this));
+	      var keyUp = this.handleKeyUp.bind(this);
+	      var keyDown = this.handleKeyDown.bind(this);
+	      window.addEventListener('keyup', keyUp);
+	      window.addEventListener('keydown', keyDown);
+	      this.clearKeyListeners = function () {
+	        window.removeEventListener('keyup', keyUp);
+	        window.removeEventListener('keydown', keyDown);
+	      };
 	    }
 	  }, {
 	    key: 'addStartListener',

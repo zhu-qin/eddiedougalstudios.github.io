@@ -24,6 +24,11 @@ class StateManager {
     this.run()
   }
 
+  unMountGame() {
+    this.running = false
+    this.keyManager.clearKeyListeners()
+  }
+
   setMenuState(){
     this.currentState = this.menuState
     this.keyManager.addStartListener()
@@ -69,8 +74,8 @@ class StateManager {
         //
         // if (timeDelta >= millisecondsPerFrame) {
         // this.preTick()
-          this.forceUpdate()
           if (this.running) {
+            this.forceUpdate()
             // this.preTick()
             this.tick()
             this.render()
