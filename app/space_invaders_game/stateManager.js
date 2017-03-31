@@ -4,7 +4,7 @@ import KeyManager from './keyManager'
 import SpaceInvadersConfig from './spaceInvadersConfig'
 
 class StateManager {
-  constructor(config) {
+  constructor(init) {
     this.config = SpaceInvadersConfig
     this.gameWidth = SpaceInvadersConfig.gameWidth
     this.gameHeight = SpaceInvadersConfig.gameHeight
@@ -12,8 +12,8 @@ class StateManager {
     this.menuState = new MenuState({stateManager: this})
     this.playingState = new PlayingState({stateManager: this})
     this.currentState = this.menuState
-    this.context = config.context
-    this.reactView = config.reactView
+    this.context = init.context
+    this.reactView = init.reactView
     this.running = false
     this.forceUpdate = undefined
     this.showMenu()
@@ -37,9 +37,7 @@ class StateManager {
   addScoreListener(listener) {
     this.forceUpdate = listener
     return {
-      remove: () => {
-        delete this.forceUpdate
-      }
+      remove: () => delete this.forceUpdate
     }
   }
 
@@ -71,9 +69,7 @@ class StateManager {
         // nextTime = Date.now()
         // timeDelta += (nextTime - timeNow)
         // timeNow = nextTime
-        //
-        // if (timeDelta >= millisecondsPerFrame) {
-        // this.preTick()
+
           if (this.running) {
             this.forceUpdate()
             // this.preTick()
@@ -83,9 +79,9 @@ class StateManager {
           } else {
             clearInterval(this.interval)
           }
-        // this.postRender()
+
         //   timeDelta -= millisecondsPerFrame
-        // }
+
     }, 1000/60)
   }
 

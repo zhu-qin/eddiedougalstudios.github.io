@@ -26192,7 +26192,7 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var StateManager = function () {
-	  function StateManager(config) {
+	  function StateManager(init) {
 	    _classCallCheck(this, StateManager);
 
 	    this.config = _spaceInvadersConfig2.default;
@@ -26202,8 +26202,8 @@
 	    this.menuState = new _menuState2.default({ stateManager: this });
 	    this.playingState = new _playingState2.default({ stateManager: this });
 	    this.currentState = this.menuState;
-	    this.context = config.context;
-	    this.reactView = config.reactView;
+	    this.context = init.context;
+	    this.reactView = init.reactView;
 	    this.running = false;
 	    this.forceUpdate = undefined;
 	    this.showMenu();
@@ -26235,7 +26235,7 @@
 	      this.forceUpdate = listener;
 	      return {
 	        remove: function remove() {
-	          delete _this.forceUpdate;
+	          return delete _this.forceUpdate;
 	        }
 	      };
 	    }
@@ -26274,9 +26274,7 @@
 	        // nextTime = Date.now()
 	        // timeDelta += (nextTime - timeNow)
 	        // timeNow = nextTime
-	        //
-	        // if (timeDelta >= millisecondsPerFrame) {
-	        // this.preTick()
+
 	        if (_this2.running) {
 	          _this2.forceUpdate();
 	          // this.preTick()
@@ -26286,9 +26284,8 @@
 	        } else {
 	          clearInterval(_this2.interval);
 	        }
-	        // this.postRender()
+
 	        //   timeDelta -= millisecondsPerFrame
-	        // }
 	      }, 1000 / 60);
 	    }
 	  }]);
@@ -27533,11 +27530,11 @@
 
 	var links = [_react2.default.createElement(
 	  'a',
-	  { className: 'link-button intro-link', href: 'https://github.com/zhu-qin' },
+	  { key: 'github', className: 'link-button intro-link', href: 'https://github.com/zhu-qin' },
 	  'Github'
 	), _react2.default.createElement(
 	  'a',
-	  { className: 'link-button intro-link', href: 'https://www.linkedin.com/in/qin-zhu/' },
+	  { key: 'linkedin', className: 'link-button intro-link', href: 'https://www.linkedin.com/in/qin-zhu/' },
 	  'LinkedIn'
 	)];
 

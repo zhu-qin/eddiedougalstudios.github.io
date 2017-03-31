@@ -22,7 +22,6 @@ class Router extends React.Component {
       let url = window.location.hash.split("#").pop();
       this.setState({ path: url })
     }
-
   }
 
   render () {
