@@ -181,6 +181,7 @@ class PlayingState extends GameState {
       this.shipLives = this.stateManager.config.shipLives
       this.stateManager.setMenuState()
       this.setHighScore()
+      this.score = 0
       return true
     }
   }
