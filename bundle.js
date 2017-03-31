@@ -26489,6 +26489,7 @@
 	    _this.aliens = _this.makeAliens();
 	    _this.setVectorForAlien = _this.setVectorFunction();
 	    _this.counter = 0;
+	    _this.spawnCounter = 0;
 	    _this.shipLives = _this.stateManager.config.shipLives;
 	    _this.score = 0;
 	    return _this;
@@ -26623,9 +26624,9 @@
 	    value: function alienCollisions() {
 	      var _this4 = this;
 
-	      this.aliens.forEach(function (alien) {
-	        _this4.shipBullets.forEach(function (shipBullet) {
-	          _this4.collidesWithRock(shipBullet);
+	      this.shipBullets.forEach(function (shipBullet) {
+	        _this4.collidesWithRock(shipBullet);
+	        _this4.aliens.forEach(function (alien) {
 	          var distance = _spaceInvadersUtils2.default.distance(alien.pos, shipBullet.pos);
 	          if (distance <= alien.radius + shipBullet.radius) {
 	            _this4.score += 100;
@@ -26645,8 +26646,17 @@
 	  }, {
 	    key: 'spawnAliens',
 	    value: function spawnAliens() {
-	      if (this.counter % this.stateManager.config.respawnRate === 0) {
+	      this.spawnCounter += 1;
+	      if (this.spawnCounter % this.stateManager.config.respawnRate === 0 || this.aliens.length === 0) {
 	        this.aliens = this.aliens.concat(this.makeAliens());
+	        this.spawnCounter = 0;
+	      }
+	    }
+	  }, {
+	    key: 'setHighScore',
+	    value: function setHighScore() {
+	      if (localStorage.spaceInvadersHighScores && this.score > localStorage.spaceInvadersHighScores) {
+	        localStorage.spaceInvadersHighScores = this.score;
 	      }
 	    }
 	  }, {
@@ -26655,6 +26665,7 @@
 	      if (this.shipLives <= 0) {
 	        this.shipLives = this.stateManager.config.shipLives;
 	        this.stateManager.setMenuState();
+	        this.setHighScore();
 	        return true;
 	      }
 	    }
@@ -27387,9 +27398,9 @@
 	  entityRadius: 20,
 	  shipStartPos: [400, 500],
 	  rockStartPos: [400, 300],
-	  shipMoveSpeed: 3,
+	  shipMoveSpeed: 2,
 	  rockSpeed: 2,
-	  shipBulletSpeed: 2,
+	  shipBulletSpeed: 3,
 	  alienBulletSpeed: 2,
 	  alienBulletFrequency: 1000,
 	  alienGap: 95,

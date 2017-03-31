@@ -18,6 +18,7 @@ class PlayingState extends GameState {
     this.aliens = this.makeAliens()
     this.setVectorForAlien = this.setVectorFunction()
     this.counter = 0
+    this.spawnCounter = 0
     this.shipLives = this.stateManager.config.shipLives
     this.score = 0
   }
@@ -142,16 +143,16 @@ class PlayingState extends GameState {
   }
 
   alienCollisions() {
-    this.aliens.forEach((alien) => {
-      this.shipBullets.forEach((shipBullet) => {
-        this.collidesWithRock(shipBullet)
-        let distance = SpaceInvadersUtils.distance(alien.pos, shipBullet.pos)
-        if (distance <= alien.radius + shipBullet.radius) {
-          this.score += 100
-          this.remove(alien)
-          this.remove(shipBullet)
-          this.addExplosion(alien)
-        }
+    this.shipBullets.forEach((shipBullet) => {
+      this.collidesWithRock(shipBullet)
+        this.aliens.forEach((alien) => {
+          let distance = SpaceInvadersUtils.distance(alien.pos, shipBullet.pos)
+          if (distance <= alien.radius + shipBullet.radius) {
+            this.score += 100
+            this.remove(alien)
+            this.remove(shipBullet)
+            this.addExplosion(alien)
+          }
       })
     })
   }
@@ -162,8 +163,16 @@ class PlayingState extends GameState {
   }
 
   spawnAliens() {
-    if(this.counter%this.stateManager.config.respawnRate === 0) {
+    this.spawnCounter += 1
+    if (this.spawnCounter%this.stateManager.config.respawnRate === 0 || this.aliens.length === 0) {
       this.aliens = this.aliens.concat(this.makeAliens())
+      this.spawnCounter = 0
+    }
+  }
+
+  setHighScore() {
+    if (localStorage.spaceInvadersHighScores && this.score > localStorage.spaceInvadersHighScores) {
+      localStorage.spaceInvadersHighScores = this.score
     }
   }
 
@@ -171,6 +180,7 @@ class PlayingState extends GameState {
     if (this.shipLives <= 0) {
       this.shipLives = this.stateManager.config.shipLives
       this.stateManager.setMenuState()
+      this.setHighScore()
       return true
     }
   }
