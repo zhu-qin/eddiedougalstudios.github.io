@@ -27128,6 +27128,12 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var textStyle = {
+	  padding: '5px',
+	  fontSize: '18px',
+	  textAlign: 'left'
+	};
+
 	var SampleAppView = function (_React$Component) {
 	  _inherits(SampleAppView, _React$Component);
 
@@ -27150,6 +27156,13 @@
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'intro-wrapper' },
+	            _react2.default.createElement(
+	              'div',
+	              { style: textStyle },
+	              'This application is built on top of Polymer.JS and Redux on top of Nuxeo services backend.',
+	              _react2.default.createElement('br', null),
+	              'Using the latest web components standards, the application is event driven, declarative, and focused on user experience.'
+	            ),
 	            _react2.default.createElement('video', { src: 'app/assets/nuxeo_app.mp4', controls: true })
 	          )
 	        )
