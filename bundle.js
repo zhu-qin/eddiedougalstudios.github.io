@@ -22117,17 +22117,19 @@
 
 	var _sample_app_view2 = _interopRequireDefault(_sample_app_view);
 
+	var _contact_view = __webpack_require__(240);
+
+	var _contact_view2 = _interopRequireDefault(_contact_view);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// components
 	var Views = {
 	  'Intro': _intro_view2.default,
 	  'SpaceInvaders': _space_invaders_view2.default,
 	  'Nuxeo App': _sample_app_view2.default,
 	  'Tetris': _tetris_view2.default,
-	  'Contact': _intro_view2.default
-	};
-
+	  'Contact': _contact_view2.default
+	}; // components
 	exports.default = Views;
 
 /***/ }),
@@ -27031,7 +27033,7 @@
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'intro-links-wrapper' },
-	              links
+	              this.props.embeddedView ? this.props.embeddedView : links
 	            )
 	          )
 	        )
@@ -27159,6 +27161,115 @@
 	}(_react2.default.Component);
 
 	exports.default = SampleAppView;
+
+/***/ }),
+/* 240 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _left_panel_intro = __webpack_require__(238);
+
+	var _left_panel_intro2 = _interopRequireDefault(_left_panel_intro);
+
+	var _intro_view = __webpack_require__(237);
+
+	var _intro_view2 = _interopRequireDefault(_intro_view);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var formStyle = {
+	  padding: '20px'
+	};
+
+	var textInput = {
+	  width: "500px",
+	  height: "150px",
+	  textAlign: "left",
+	  border: "1px solid",
+	  borderRadius: "2px",
+	  resize: "none"
+	};
+
+	var emailInput = {
+	  width: "500px",
+	  height: "20px",
+	  display: 'block',
+	  textAlign: "left",
+	  border: "1px solid",
+	  borderRadius: "2px"
+	};
+
+	var contact = _react2.default.createElement(
+	  'form',
+	  { style: formStyle, action: 'https://formspree.io/qqinzhu@gmail.com', method: 'POST' },
+	  _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement(
+	      'div',
+	      null,
+	      'Message:'
+	    ),
+	    _react2.default.createElement('textarea', { style: textInput, name: 'name' })
+	  ),
+	  _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement(
+	      'div',
+	      null,
+	      'Email:'
+	    ),
+	    _react2.default.createElement('input', { style: emailInput, type: 'email', name: '_replyto' })
+	  ),
+	  _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement('input', { className: "link-button", type: 'submit', value: 'Send' })
+	  )
+	);
+
+	var ContactView = function (_React$Component) {
+	  _inherits(ContactView, _React$Component);
+
+	  function ContactView(props) {
+	    _classCallCheck(this, ContactView);
+
+	    return _possibleConstructorReturn(this, (ContactView.__proto__ || Object.getPrototypeOf(ContactView)).call(this, props));
+	  }
+
+	  _createClass(ContactView, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_intro_view2.default, { embeddedView: contact })
+	      );
+	    }
+	  }]);
+
+	  return ContactView;
+	}(_react2.default.Component);
+
+	exports.default = ContactView;
 
 /***/ })
 /******/ ]);

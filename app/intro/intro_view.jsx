@@ -48,7 +48,7 @@ class IntroView extends React.Component {
                 {skillIcons}
               </div>
               <div className={'intro-links-wrapper'}>
-                {links}
+                { this.props.embeddedView ? this.props.embeddedView : links }
               </div>
             </div>
           </div>

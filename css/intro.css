@@ -35,9 +35,7 @@
 
 .intro-links-wrapper {
   display: flex;
-  width: 300px;
-  margin: auto;
-  background-color:
+  justify-content: center;
 }
 
 .intro-link {
