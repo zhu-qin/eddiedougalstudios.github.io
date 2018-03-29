@@ -27159,7 +27159,7 @@
 	            _react2.default.createElement(
 	              'div',
 	              { style: textStyle },
-	              'This application is built on top of Polymer.JS and Redux on top of Nuxeo services backend.',
+	              'This application was built with Polymer.JS and Redux on top of Nuxeo services backend.',
 	              _react2.default.createElement('br', null),
 	              'Using the latest web components standards, the application is event driven, declarative, and focused on user experience.'
 	            ),
