@@ -22126,7 +22126,7 @@
 	var Views = {
 	  'Intro': _intro_view2.default,
 	  'SpaceInvaders': _space_invaders_view2.default,
-	  'Nuxeo App': _sample_app_view2.default,
+	  'NuxeoApp': _sample_app_view2.default,
 	  'Tetris': _tetris_view2.default,
 	  'Contact': _contact_view2.default
 	}; // components
