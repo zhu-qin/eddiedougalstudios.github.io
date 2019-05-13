@@ -8,7 +8,7 @@ import ContactView from './contact/contact_view.jsx'
 const Views = {
   'Intro': IntroView,
   'SpaceInvaders': SpaceInvadersView,
-  'NuxeoApp': SampleAppView,
+  'SampleApp': SampleAppView,
   'Tetris': TetrisView,
   'Contact': ContactView,
 }

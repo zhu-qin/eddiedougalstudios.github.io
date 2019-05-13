@@ -20,7 +20,7 @@ class SampleAppView extends React.Component {
           <div className="gameview">
             <div className="intro-wrapper">
               <div style={textStyle}>
-                This application was built with Polymer.JS and Redux on top of Nuxeo services backend.<br></br>
+                This application was built with Polymer.JS and Redux.<br></br>
                 Using the latest web components standards, the application is event driven, declarative, and focused on user experience.
               </div>
               <video src="app/assets/nuxeo_app.mp4" controls></video>

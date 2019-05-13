@@ -40,7 +40,7 @@ class IntroView extends React.Component {
             <div className={"intro-wrapper"}>
               <div className={"intro-title"}>Hi, I'm Qin Zhu</div>
 							<div className={"intro-paragraph"}>
-                I am a developer working in digital asset management at {nuxeoLink} <br></br>
+                I am a software engineer working in New York City. <br></br>
                 Some technologies I have worked with are Ruby, Rails, JavaScript, Node, React.JS, Polymer.
                 I am also an avid gamer and love playing games as well as building them.
               </div>
