@@ -24,4 +24,4 @@ document.addEventListener("DOMContentLoaded", (e) => {
   ReactDOM.render(App, root)
 })
 
-// test push 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
+// test push
