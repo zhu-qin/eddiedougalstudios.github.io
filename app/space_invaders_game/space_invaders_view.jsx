@@ -5,7 +5,7 @@ import LeftPanelSpaceInvaders from './left_panel_space_invaders.jsx'
 
 let imagesLoaded = false;
 
-class SpaceInvadersView extends React.Component {
+class InvadersView extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
@@ -57,4 +57,4 @@ class SpaceInvadersView extends React.Component {
 
 }
 
-export default SpaceInvadersView
+export default InvadersView

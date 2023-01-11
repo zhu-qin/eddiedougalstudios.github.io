@@ -6,8 +6,6 @@ const links = [
   <a key={'linkedin'} className={'link-button intro-link'} href='https://www.linkedin.com/in/qin-zhu/'>LinkedIn</a>,
 ]
 
-const nuxeoLink = <a href="https://www.nuxeo.com/">Nuxeo DAM</a>
-
 const skillIcons = [
   "ruby.png",
   "rails.png",
@@ -27,7 +25,7 @@ const skillIcons = [
   )
 })
 
-class IntroView extends React.Component {
+class EddieView extends React.Component {
   constructor(props){
     super(props);
   }
@@ -38,11 +36,14 @@ class IntroView extends React.Component {
           <LeftPanelIntro/>
           <div className="gameview">
             <div className={"intro-wrapper"}>
-              <div className={"intro-title"}>Hi, I'm Qin Zhu</div>
+              <div className={"intro-title"}>Eddie Dougal</div>
 							<div className={"intro-paragraph"}>
-                I am a software engineer working in New York City. <br></br>
-                Some technologies I have worked with are Ruby, Rails, JavaScript, Node, React.JS, Polymer.
-                I am also an avid gamer and love playing games as well as building them.
+Eddie Dougal - Film Producer, Engineer.<br></br>
+Office Scene - Four cubic bulbs diagonal to each corner of a four walled room. Good morning to the office.<br></br>
+Actor one: "The meeting is cancelled, keep working". Exit - imply coffee break at coffee shop.<br></br>
+Actor two: "Good idea". Fingers on keyboard, check emails, prepare to watch movies. Not enough time to complete all tasks. Reconsider and exit quickly.
+Exit - suspicious activity at home.<br></br>
+Actor three: "Godd idea". Exit - also suspicious activity at home.<br></br>
               </div>
               <div className="intro-skills-list">
                 {skillIcons}
@@ -57,4 +58,4 @@ class IntroView extends React.Component {
   }
 }
 
-export default IntroView;
+export default EddieView;

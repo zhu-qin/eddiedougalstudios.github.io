@@ -8,7 +8,7 @@ const textStyle = {
   textAlign: 'left'
 }
 
-class SampleAppView extends React.Component {
+class AppView extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -31,4 +31,4 @@ class SampleAppView extends React.Component {
   }
 }
 
-export default SampleAppView;
+export default AppView;

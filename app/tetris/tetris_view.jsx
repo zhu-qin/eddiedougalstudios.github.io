@@ -3,7 +3,7 @@ import LeftPanel from './left_panel';
 import RightPanel from './right_panel';
 import Game from './tetris_game';
 
-class TetrisView extends React.Component {
+class BlocksView extends React.Component {
   constructor(props){
     super(props);
     this.state = {game: new Game(this)};
@@ -61,4 +61,4 @@ class TetrisView extends React.Component {
   }
 }
 
-module.exports = TetrisView;
+export default BlocksView
