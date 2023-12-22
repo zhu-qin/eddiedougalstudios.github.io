@@ -53,7 +53,7 @@ const contact = (<form style={formStyle} action="https://formspree.io/qqinzhu@gm
 
                   <div>
                     <div>
-                      <div style={textSizing}>Type a text message to Eddie's email:</div>
+                      <div style={textSizing}>Type a text message to Qin's email:</div>
                       <textarea style={textInput} name="name"></textarea>
                     </div>
 
