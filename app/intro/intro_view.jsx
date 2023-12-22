@@ -25,7 +25,7 @@ const skillIcons = [
   )
 })
 
-class EddieView extends React.Component {
+class IntroductionView extends React.Component {
   constructor(props){
     super(props);
   }
@@ -36,14 +36,11 @@ class EddieView extends React.Component {
           <LeftPanelIntro/>
           <div className="gameview">
             <div className={"intro-wrapper"}>
-              <div className={"intro-title"}>Eddie Dougal</div>
+              <div className={"intro-title"}>Qin Zhu</div>
 							<div className={"intro-paragraph"}>
-Eddie Dougal - Film Producer, Engineer.<br></br>
-Office Scene - Four cubic bulbs diagonal to each corner of a four walled room. Good morning to the office.<br></br>
-Actor one: "The meeting is cancelled, keep working". Exit - imply coffee break at coffee shop.<br></br>
-Actor two: "Good idea". Fingers on keyboard, check emails, prepare to watch movies. Not enough time to complete all tasks. Reconsider and exit quickly.
-Exit - suspicious activity at home.<br></br>
-Actor three: "Godd idea". Exit - also suspicious activity at home.<br></br>
+
+Hi, I'm Qin Zhu. A software engineer based in New York City, USA. The languages I work with include Javascript, HTML, CSS, Ruby, and Java. My experience is building and deploying user interfaces for enterprise content management software.<br></br>
+
               </div>
               <div className="intro-skills-list">
                 {skillIcons}
@@ -58,4 +55,4 @@ Actor three: "Godd idea". Exit - also suspicious activity at home.<br></br>
   }
 }
 
-export default EddieView;
+export default IntroductionView;
