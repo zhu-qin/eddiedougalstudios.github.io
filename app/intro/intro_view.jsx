@@ -39,7 +39,7 @@ class IntroductionView extends React.Component {
               <div className={"intro-title"}>Qin Zhu</div>
 							<div className={"intro-paragraph"}>
 
-Hi, I'm Qin Zhu. A software engineer based in New York City, USA. The languages I work with include Javascript, HTML, CSS, Ruby, and Java. My experience is building and deploying user interfaces for enterprise content management software.<br></br>
+Hi, I'm Qin Zhu. A software engineer based in New York City, USA. The languages I work with include Javascript, HTML, CSS, Ruby, and Java. My experiences include building and deploying user interfaces for enterprise content management software.<br></br>
 
               </div>
               <div className="intro-skills-list">
