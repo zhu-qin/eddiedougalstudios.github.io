@@ -31,6 +31,7 @@ class IntroductionView extends React.Component {
   }
 
   render() {
+    debugger
     return (
         <div className="game-wrapper">
           <LeftPanelIntro/>
