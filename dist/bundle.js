@@ -508,7 +508,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var links = [_react2.default.createElement(
   'a',
-  { key: 'github', className: 'link-button intro-link', href: 'https://github.com/qin-zhu' },
+  { key: 'github', className: 'link-button intro-link', href: 'https://github.com/zhu-qin' },
   'Github'
 ), _react2.default.createElement(
   'a',
@@ -536,7 +536,6 @@ var IntroductionView = function (_React$Component) {
   _createClass(IntroductionView, [{
     key: 'render',
     value: function render() {
-      debugger;
       return _react2.default.createElement(
         'div',
         { className: 'game-wrapper' },

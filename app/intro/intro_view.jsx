@@ -2,7 +2,7 @@ import React from 'react';
 import LeftPanelIntro from './left_panel_intro';
 
 const links = [
-  <a key={'github'} className={'link-button intro-link'} href='https://github.com/qin-zhu'>Github</a>,
+  <a key={'github'} className={'link-button intro-link'} href='https://github.com/zhu-qin'>Github</a>,
   <a key={'linkedin'} className={'link-button intro-link'} href='https://www.linkedin.com/in/zhu-qin/'>LinkedIn</a>,
 ]
 
@@ -31,7 +31,6 @@ class IntroductionView extends React.Component {
   }
 
   render() {
-    debugger
     return (
         <div className="game-wrapper">
           <LeftPanelIntro/>
